@@ -1,252 +1,208 @@
 #pragma once
-#include "Block.h"
-#include "ChunkManager.h"
-#include "ChunkRenderer.h"
 #include <iostream>
+#include <atomic>
+#include "Voxel.h"
+#include "ChunkRenderer.h"
+#include "ChunkMesh.h"
 
-#define CHUNK_SIZE 16
+/*
+how to handle the renderer and chunkk pointers?
+*/
 
-struct VoxelFace {
-	bool transparent;
-	BlockType* blocktype;
-	int side;
+#define CHUNK_SIZE 32
 
-	VoxelFace* equals(VoxelFace* other) {
-		if (this->transparent == other->transparent && this->blocktype == other->blocktype) {
-			return other;
-		}
-		return nullptr;
-	}
-};
+class ChunkManager;
 
 enum BlockFace {
-	SOUTH,NORTH,EAST,WEST,TOP,BOTTOM
-};
-
-struct BlockFaceTesting {
-	bool X_FACE1 = false;
-	bool X_FACE2 = false;
-	bool Y_FACE1 = false;
-	bool Y_FACE2 = false;
-	bool Z_FACE1 = false;
-	bool Z_FACE2 = false;
-
-	void resetFaces() {
-		X_FACE1 = false;
-		X_FACE2 = false;
-		Y_FACE1 = false;
-		Y_FACE2 = false;
-		Z_FACE1 = false;
-		Z_FACE2 = false;
-	}
+	RIGHT = 0, TOP = 1, BACK = 2, LEFT = 3, BOTTOM = 4, FRONT = 5
 };
 
 class Chunk {
 public:
-	Chunk(ChunkRenderer& renderer , glm::ivec3 position) {
-		this->m_position = position;
-		m_pRenderer = &renderer;
-		m_meshData = m_pRenderer->createMesh();
+	Chunk(glm::ivec3 position);
+	~Chunk();
 
-		m_pBlocks = new Block**[CHUNK_SIZE];
-		for (int i = 0; i < CHUNK_SIZE;i++) {
-			
-			m_pBlocks[i] = new Block*[CHUNK_SIZE];
-				
-			for (int j = 0; j < CHUNK_SIZE; j++) {
-				m_pBlocks[i][j] = new Block[CHUNK_SIZE];
-			}
-		}
-
-	};
-	~Chunk() {
-		for (int i = 0; i < CHUNK_SIZE; ++i)
-		{
-			for (int j = 0; j < CHUNK_SIZE; ++j)
-			{
-				delete[] m_pBlocks[i][j];
-			}
-
-			delete[] m_pBlocks[i];
-		}
-		delete[] m_pBlocks;
-	}
-
-	void updateMesh();
+	//Loading/Unloading functions
+	void setUp();
+	void cleanUp();
+	void load();
+	void unLoad();
+	
+	glm::ivec3 getPosition() { return m_position; };
+	ChunkMesh* getMesh();
 	void activateAll();
 	void deactivateAll();
 	void deactivateBlock(int x, int y, int z);
 	void activateBlock(int x, int y, int z);
-	void replaceBlock(int x, int y, int z, BlockType* type);
-	void createBlockMesh(int x, int y, int z, std::vector<bool>& activeFace);
-	bool isBlockVisible(int x, int y, int z, std::vector<bool>& visibility);
-	void updateVisibleFaceStruct(int x, int y, int z, BlockFaceTesting& faces);
 	
-	void addQuad(glm::vec3 botLeft, glm::vec3 topLeft, glm::vec3 topRight, glm::vec3 botRight, bool backFace);
+	bool isBlockFaceVisible(glm::vec3 pos, BlockFace face);
+	bool isLeftFaceFull();
+	bool isRightFaceFull();
+	bool isFrontFaceFull();
+	bool isBackFaceFull();
+	bool isTopFaceFull();
+	bool isBottomFaceFull();
 	void greedyMeshing();
-	VoxelFace* getVoxelFace(int x, int y, int z, int side);
-private:
-	MeshData* m_meshData;
-	ChunkRenderer* m_pRenderer;
-	glm::ivec3 m_position;
 
-	Block*** m_pBlocks;
+	Chunk* getTopNeighbor() { return m_top; };
+	Chunk* getBottomNeighbor() { return m_bottom; };
+	Chunk* getLeftNeighbor() { return m_left; };
+	Chunk* getRightNeighbor() { return m_right; };
+	Chunk* getFrontNeighbor() { return m_front; };
+	Chunk* getBackNeighbor() { return m_back; };
+
+private:
+	glm::ivec3 m_position;
+	glm::ivec3 m_offset;
+	Voxel*** m_voxelArry;
+	ChunkManager *m_manager;
+	ChunkMesh m_mesh;
+
+	//NeighBorChunks
+	Chunk* m_top;
+	Chunk* m_bottom;
+	Chunk* m_left;
+	Chunk* m_right;
+	Chunk* m_front;
+	Chunk* m_back;
+	
+	//Atomic flags
+	std::atomic<bool> m_setUp;
+	std::atomic<bool> m_needsReMeshing;
+	std::atomic<bool> m_mayBeVisible;
+	std::atomic<bool> m_loaded;
 };
 
+//Constructor and Deconstructor
+Chunk::Chunk(glm::ivec3 position) {
+	m_position = position;
+	m_offset = position*CHUNK_SIZE;
+
+	m_setUp.store(false);
+	m_loaded.store(false);
+	m_needsReMeshing.store(false);
+	m_mayBeVisible.store(false);
+
+	m_top = nullptr;
+	m_bottom = nullptr;
+	m_left = nullptr;
+	m_right = nullptr;
+	m_front = nullptr;
+	m_back = nullptr;
+};
+
+Chunk::~Chunk() {
+}
+
+//Public
+
+//Must be performed in main Thread!
+//Not 100% sure this works or is set up right
+void Chunk::setUp() {
+	m_mesh.setUp();
+	
+	Chunk* neighbor;
+
+	//Top Neighbor;
+	if ((neighbor = m_manager->getChunk(m_position + glm::ivec3(0,1,0))) != nullptr) {
+		m_top = neighbor;
+	}
+	neighbor = nullptr;
+
+	//Bottom Neighbor
+	if ((neighbor = m_manager->getChunk(m_position + glm::ivec3(0, -1, 0))) != nullptr) {
+		m_bottom = neighbor;
+	}
+	neighbor = nullptr;
+
+	//Left Neighbor
+	if ((neighbor = m_manager->getChunk(m_position + glm::ivec3(1, 0, 0))) != nullptr) {
+		m_left = neighbor;
+	}
+	neighbor = nullptr;
+
+	//Right Neighbor
+	if ((neighbor = m_manager->getChunk(m_position + glm::ivec3(-1, 0, 0))) != nullptr) {
+		m_right = neighbor;
+	}
+	neighbor = nullptr;
+
+	//Front Neighbor
+	if ((neighbor = m_manager->getChunk(m_position + glm::ivec3(0, 0, 1))) != nullptr) {
+		m_front = neighbor;
+	}
+	neighbor = nullptr;
+
+	//Back Neighbor
+	if ((neighbor = m_manager->getChunk(m_position + glm::ivec3(0, 0, -1))) != nullptr) {
+		m_back = neighbor;
+	}
+	neighbor = nullptr;
+	m_setUp.store(true);
+}
+
+//Must be called in main Thread!
+void Chunk::cleanUp() {
+	m_mesh.cleanUp();
+	
+	//change pointers here
+	m_setUp.store(false);
+}
+
+//Load and unload functions
+void Chunk::load() {
+	assert(!m_loaded.load() && "Error: chunk already loaded");
+	assert(m_setUp.load() && "Error: chunk has not been set up");
+	
+	m_voxelArry = new Voxel**[CHUNK_SIZE];
+	for (int i = 0; i < CHUNK_SIZE; i++) {
+		m_voxelArry[i] = new Voxel*[CHUNK_SIZE];
+		for (int j = 0; j < CHUNK_SIZE; j++) {
+			m_voxelArry[i][j] = new Voxel[CHUNK_SIZE];
+		}
+	}
+	
+	//Here we load chunk from file or generate it with libnoise
+
+	m_loaded.store(true);
+}
+
+void Chunk::unLoad() {
+	assert(m_loaded.load() && "Error: chunk is already unloaded loaded");
+	assert(!m_setUp.load() && "Error: chunk is setup must call cleanUp");
+	
+	for (int i = 0; i <CHUNK_SIZE; i++) {
+		for (int j = 0; j < CHUNK_SIZE; j++) {
+			delete[] m_voxelArry[i][j];
+		}
+		delete[] m_voxelArry[i];
+	}
+	delete[] m_voxelArry;
+
+	//Unload chunk into memory possibly save it here
+
+	m_loaded.store(false);
+}
+
+//END Load and unload Funcitons
+
 void Chunk::deactivateBlock(int x, int y, int z) {
-	m_pBlocks[x][y][z].setActive(false);
+	m_voxelArry[x][y][z].setActive(false);
 }
 
 void Chunk::activateBlock(int x, int y, int z) {
-	m_pBlocks[x][y][z].setActive(true);
+	m_voxelArry[x][y][z].setActive(false);
 }
 
-void Chunk::updateMesh() {
-	m_pRenderer->startEditingMesh(m_meshData);
-	greedyMeshing();
-	/*
-	std::vector<bool> visibility({ true, true, true,true,true,true,true });
-	for (int x = 0; x < CHUNK_SIZE; x++)
-	{
-		for (int y = 0; y < CHUNK_SIZE; y++)
-		{
-			
-			for (int z = 0; z < CHUNK_SIZE; z++)
-			{
-				visibility[0] = true;
-				visibility[1] = true;
-				visibility[2] = true;
-				visibility[3] = true;
-				visibility[4] = true;
-				visibility[5] = true;
-				bool visible = isBlockVisible(x, y, z, visibility);
-				if (m_pBlocks[x][y][z].isActive() && visible)
-				{
-					createBlockMesh(x, y, z,visibility);
-					// Don't create triangle data for inactive blocks
-				}
-				
-			}
-		}
-	}
-
-	*/
-	m_pRenderer->stopEditingMesh(m_meshData);
-	
-		
+ChunkMesh* Chunk::getMesh() {
+	return &m_mesh;
 }
-/*
-bool Chunk::isBlockVisible(int x, int y, int z, std::vector<bool>& visibility) {
-	short counter = 0;
-		
-		if (x != 0) {
-			if (m_pBlocks[x - 1][y][z].isActive()) {
-				visibility[BlockFace::LEFT] = false;
-				++counter;
-			}
-		}
-		if (x != CHUNK_SIZE - 1) {
-			if (m_pBlocks[x + 1][y][z].isActive()) {
-				visibility[BlockFace::RIGHT] = false;
-				++counter;
-			}
-		}
-		if (y < CHUNK_SIZE - 1) {
-			if (m_pBlocks[x][y + 1][z].isActive()) {
-				visibility[BlockFace::UP] = false;
-				++counter;
-			}
-		}
-		if (y != 0) {
-			if (m_pBlocks[x][y - 1][z].isActive()) {
-				visibility[BlockFace::DOWN] = false;
-				++counter;
-			}
-		}
-		if (z != 0) {
-			if (m_pBlocks[x][y][z - 1].isActive()) {
-				visibility[BlockFace::BACK] = false;
-				++counter;
-			}
-		}
-		if (z < CHUNK_SIZE - 1) {
-			if (m_pBlocks[x][y][z + 1].isActive()) {
-				visibility[BlockFace::FRONT] = false;
-				++counter;
-			}
-		}
 
-		if (counter == 6) {
-			return false;
-		}
-		
-	return true;
-}
-*/
-/*
-void Chunk::createBlockMesh(int x, int y, int z, std::vector<bool>& activeFace) {
-	
-	unsigned int indicies[8];
-	
-	indicies[0] = m_meshData->vertexPositions.size();
-	indicies[1] = m_meshData->vertexPositions.size() + 1;
-	indicies[2] = m_meshData->vertexPositions.size() + 2;
-	indicies[3] = m_meshData->vertexPositions.size() + 3;
-	indicies[4] = m_meshData->vertexPositions.size() + 4;
-	indicies[5] = m_meshData->vertexPositions.size() + 5;
-	indicies[6] = m_meshData->vertexPositions.size() + 6;
-	indicies[7] = m_meshData->vertexPositions.size() + 7;
-
-	int chunkOffestX = m_position.x*CHUNK_SIZE;
-	int chunkOffestY = m_position.y*CHUNK_SIZE;
-	int chunkOffestZ = m_position.z*CHUNK_SIZE;
-	
-	m_pRenderer->addVertex(m_meshData, glm::vec3(x-0.5f + chunkOffestX, y-0.5f + chunkOffestY, z+0.5f + chunkOffestZ), glm::vec3(1.0f / x, 1.0f / y, 1.0f / z)); //V0
-	m_pRenderer->addVertex(m_meshData, glm::vec3(x+0.5f + chunkOffestX, y-0.5f + chunkOffestY, z+0.5f + chunkOffestZ), glm::vec3(1.0f / x, 1.0f / y, 1.0f/ z)); //V1
-	m_pRenderer->addVertex(m_meshData, glm::vec3(x+0.5f + chunkOffestX, y+0.5f + chunkOffestY, z+0.5f + chunkOffestZ), glm::vec3(1.0f / x, 1.0f / y, 1.0f / z)); //V2
-	m_pRenderer->addVertex(m_meshData, glm::vec3(x-0.5f + chunkOffestX, y+0.5f + chunkOffestY, z+0.5f + chunkOffestZ), glm::vec3(1.0f / x, 1.0f / y, 1.0f / z)); //V3
-	m_pRenderer->addVertex(m_meshData, glm::vec3(x+0.5f + chunkOffestX, y-0.5f + chunkOffestY, z-0.5f + chunkOffestZ), glm::vec3(1.0f / x, 1.0f / y, 1.0f / z)); //V4
-	m_pRenderer->addVertex(m_meshData, glm::vec3(x-0.5f + chunkOffestX, y-0.5f + chunkOffestY, z-0.5f + chunkOffestZ), glm::vec3(1.0f / x, 1.0f / y, 1.0f / z)); //V5
-	m_pRenderer->addVertex(m_meshData, glm::vec3(x-0.5f + chunkOffestX, y+0.5f + chunkOffestY, z-0.5f + chunkOffestZ), glm::vec3(1.0f / x, 1.0f / y, 1.0f/ z)); //V6
-	m_pRenderer->addVertex(m_meshData, glm::vec3(x+0.5f + chunkOffestX, y+0.5f + chunkOffestY, z-0.5f + chunkOffestZ), glm::vec3(1.0f / x, 1.0f / y, 1.0f)); //V7
-	
-	//Front
-	if (activeFace[BlockFace::FRONT]) {
-		m_pRenderer->addTriangle(m_meshData, indicies[0], indicies[1], indicies[2]);
-		m_pRenderer->addTriangle(m_meshData, indicies[0], indicies[2], indicies[3]);
-	}
-	//Back
-	if (activeFace[BlockFace::BACK]) {
-		m_pRenderer->addTriangle(m_meshData, indicies[4], indicies[5], indicies[6]);
-		m_pRenderer->addTriangle(m_meshData, indicies[4], indicies[6], indicies[7]);
-	}
-	//Left
-	if (activeFace[BlockFace::LEFT]) {
-		m_pRenderer->addTriangle(m_meshData, indicies[5], indicies[0], indicies[3]);
-		m_pRenderer->addTriangle(m_meshData, indicies[5], indicies[3], indicies[6]);
-	}
-	//Right
-	if (activeFace[BlockFace::RIGHT]) {
-		m_pRenderer->addTriangle(m_meshData, indicies[1], indicies[4], indicies[7]);
-		m_pRenderer->addTriangle(m_meshData, indicies[1], indicies[7], indicies[2]);
-	}
-	//Top
-	if (activeFace[BlockFace::UP]) {
-		m_pRenderer->addTriangle(m_meshData, indicies[3], indicies[2], indicies[7]);
-		m_pRenderer->addTriangle(m_meshData, indicies[3], indicies[7], indicies[6]);
-	}
-	//Bottom
-	if (activeFace[BlockFace::DOWN]) {
-		m_pRenderer->addTriangle(m_meshData, indicies[5], indicies[4], indicies[1]);
-		m_pRenderer->addTriangle(m_meshData, indicies[5], indicies[1], indicies[0]);
-	}
-}
-*/
 void Chunk::activateAll() {
 	for (int i = 0; i < CHUNK_SIZE; i++) {
 		for (int j = 0; j < CHUNK_SIZE; j++) {
 			for (int k = 0; k < CHUNK_SIZE; k++) {
-				m_pBlocks[i][j][k].setActive(true);
+				m_voxelArry[i][j][k].setActive(true);
 			}
 		}
 	}
@@ -256,197 +212,270 @@ void Chunk::deactivateAll() {
 	for (int i = 0; i < CHUNK_SIZE; i++) {
 		for (int j = 0; j < CHUNK_SIZE; j++) {
 			for (int k = 0; k < CHUNK_SIZE; k++) {
-				m_pBlocks[i][j][k].setActive(false);
+				m_voxelArry[i][j][k].setActive(false);
 			}
 		}
 	}
 }
 
-void Chunk::updateVisibleFaceStruct(int x, int y, int z, BlockFaceTesting& facesVisible) {
+bool Chunk::isBlockFaceVisible(glm::vec3 pos, BlockFace face) {
 
-	if (x != 0) {
-		if (!m_pBlocks[x - 1][y][z].isActive()) {
-			facesVisible.X_FACE1 = true;
+	int x = (int)pos.x;
+	int y = (int)pos.y;
+	int z = (int)pos.z;
+
+	if (!m_voxelArry[x][y][z].isActive()) {
+		return false;
+	}
+
+	if (BlockFace::FRONT == face) {
+		if (z - 1 > -1) {
+			if (!m_voxelArry[x][y][z-1].isActive()) {
+				return true;
+			}
+			return false;
+		}
+		else {
+			return true;
+			// need to check next chunk over
 		}
 	}
-	if (x != CHUNK_SIZE - 1) {
-		if (!m_pBlocks[x + 1][y][z].isActive()) {
-			facesVisible.X_FACE2 = true;
+	else if (BlockFace::BOTTOM == face) {
+		if (y - 1 > -1) {
+			if (!m_voxelArry[x][y-1][z].isActive()) {
+				return true;
+			}
+			return false;
+		}
+		else {
+			return true;
+			// need to check next chunk over
 		}
 	}
-	if (y < CHUNK_SIZE - 1) {
-		if (m_pBlocks[x][y - 1][z].isActive()) {
-			facesVisible.Y_FACE1 = true;
+	else if (BlockFace::BACK == face) {
+		if (z + 1 < CHUNK_SIZE) {
+			if (!m_voxelArry[x][y][z+1].isActive()) {
+				return true;
+			}
+			return false;
+		}
+		else {
+			return true;
+			// need to check next chunk over
+		}
+
+	}
+	else if (BlockFace::LEFT == face) {
+		if (x - 1 > -1) {
+			if (!m_voxelArry[x-1][y][z].isActive()) {
+				return true;
+			}
+			return false;
+		}
+		else {
+			return true;
+			// need to check next chunk over
+		}
+
+	}
+	else if (BlockFace::RIGHT == face) {
+		if (x + 1 < CHUNK_SIZE) {
+			if (!m_voxelArry[x+1][y][z].isActive()) {
+				return true;
+			}
+			return false;
+		}
+		else {
+			return true;
+			// need to check next chunk over
+		}
+
+	}
+	else if (BlockFace::TOP == face) {
+		if (y + 1 < CHUNK_SIZE) {
+			if (!m_voxelArry[x][y+1][z].isActive()) {
+				return true;
+			}
+			return false;
+		}
+		else {
+			//need to check next chunk over
+			return true;
 		}
 	}
-	if (y != 0) {
-		if (m_pBlocks[x][y - 1][z].isActive()) {
-			facesVisible.Y_FACE2 = true;
-		}
-	}
-	if (z != 0) {
-		if (m_pBlocks[x][y][z - 1].isActive()) {
-			facesVisible.Z_FACE1 = true;
-		}
-	}
-	if (z < CHUNK_SIZE - 1) {
-		if (m_pBlocks[x][y][z + 1].isActive()) {
-			facesVisible.Z_FACE2 = true;
-		}
-	}
+
+	return false;
 }
 
 void Chunk::greedyMeshing() {
-	int SOUTH = 0;
-	int NORTH = 1;
-	int EAST = 2;
-	int WEST = 3;
-	int TOP = 4;
-	int BOTTOM = 5;
-	
-	int i, j, k, l, w, h, u, v, n, side = 0;
-	
-	int x[3] = { 0, 0, 0 };
-	int q[3] = { 0, 0, 0 };
-	int du[3] = { 0, 0, 0 };
-	int dv[3] = { 0, 0, 0 };
-	
-	VoxelFace* mask[CHUNK_SIZE * CHUNK_SIZE];
 
-	VoxelFace* voxelFace;
-	VoxelFace* 	voxelFace1;
-	
-	for (bool backFace = true, b = false; b != backFace; backFace = backFace&& b, b = !b) {
-		
-		for (int d = 0; d < 3; d++) {
-			u = (d + 1) % 3;
-			v = (d + 2) % 3;
+	//this variable will store all of the voxel data for the current plane
+	int mask[CHUNK_SIZE * CHUNK_SIZE];
 
-			x[0] = 0;
-			x[1] = 0;
-			x[2] = 0;
 
-			q[0] = 0;
-			q[1] = 0;
-			q[2] = 0;
-			q[d] = 1;
+	BlockFace face; // stores face data
 
-			//variable = condition ? value_if_true : value_if_false
-			if (d == 0) {
-				side = backFace ? WEST : EAST;
-			}else if (d==1) {
-				side = backFace ? BOTTOM : TOP;
-			}else if (d==2) {
-				side = backFace ? SOUTH : NORTH;
-			}
+	int axis = 0; // currentPlace Axis
 
-			for (x[d] = -1; x[d] < CHUNK_SIZE;) {
-				n = 0;
+				  // iterates over the three axis  // why ++axis?
+	for (axis = 0; axis < 3; ++axis) {
+		int u = (axis + 1) % 3;
+		int v = (axis + 2) % 3;
 
-				for (x[v] = 0; x[v] < CHUNK_SIZE; x[v]++) {
-					for (x[u] = 0; x[u] < CHUNK_SIZE; x[u]++) {
-						
-						voxelFace =  (x[d] >= 0) ? getVoxelFace(x[0], x[1], x[2], side) : nullptr;
-						voxelFace1 = (x[d] < CHUNK_SIZE - 1) ? getVoxelFace(x[0] + q[0], x[1] + q[1], x[2] + q[2], side) : nullptr;
-						
-						mask[n++] = ((voxelFace != nullptr && voxelFace1 != nullptr) && voxelFace->equals(voxelFace1)) ? nullptr : backFace ? voxelFace1 : voxelFace1;
-					
-					}
-				}
+		int x[3] = { 0,0,0 };
+		int q[3] = { 0,0,0 };
 
-				x[d]++;
+		q[axis] = 1;
 
-				n = 0;
+		//Iterates through a section of the chunk at the current axis, defined by
+		//x[axis]. it then check if each face of the voxel on the current axis is visile
+		// setting 1 at the mask when it is true and 0 otherwise
+		for (x[axis] = -1; x[axis] < CHUNK_SIZE;) {
 
-				for (j = 0; j < CHUNK_SIZE; j++) {
-					for (i = 0; i < CHUNK_SIZE; i++) {
-						if (mask[n] != nullptr) {
-							for (w = 1; i + w < CHUNK_SIZE && mask[n + w] != nullptr && mask[n + w]->equals(mask[n]); w++) {
+			int n = 0; //current mask index
 
-								bool done = false;
+					   //Pretty sure this iterates through the 2d mask
+					   // x[v] and x[u] are used for x/y corrds in the mask I THINK
+			for (x[v] = 0; x[v] < CHUNK_SIZE; ++(x[v])) {
+				for (x[u] = 0; x[u] < CHUNK_SIZE; ++(x[u]), ++n) {
 
-								for (h = 1; j + h < CHUNK_SIZE; h++) {
-									for (k = 0; k < w; k++) {
-										
-										if (mask[n + k + h*CHUNK_SIZE] == nullptr || !mask[n + k + h*CHUNK_SIZE]->equals(mask[n])) {
-											done = true;
-											break;
-										}
+					face = (BlockFace)axis;
 
-										if (done) {
-											break;
-										}
-									}
+					glm::vec3 pos = glm::vec3(x[0], x[1], x[2]);
 
-									if (!mask[n]->transparent) {
-										x[u] = i;
-										x[v] = j;
+					bool frontFaceVisible = false;
+					bool backFaceVisible = false;
 
-										du[0] = 0;
-										du[1] = 0;
-										du[2] = 0;
-										du[u] = w;
-
-										dv[0] = 0;
-										dv[1] = 0;
-										dv[2] = 0;
-										dv[v] = h;
-
-										glm::vec3 bottomLeft = glm::vec3(x[0], x[1], x[2]);
-										glm::vec3 topLeft = glm::vec3(x[0] + du[0], x[1]+du[1], x[2]+du[2]);
-										glm::vec3 topRight = glm::vec3(x[0] + du[0] + dv[0], x[1] + du[1] + dv[1], x[2] + du[2] + dv[2]);
-										glm::vec3 bottomRight = glm::vec3(x[0] + dv[0], x[1] + dv[1], x[2] + dv[2]);
-										int width = w;
-										int height = h;
-										mask[n]; // voxel face
-										backFace;
-
-										addQuad(bottomLeft, topLeft, topRight, bottomRight, backFace);
-									}
-								}
-							}
+					if (0 <= x[axis]) {
+						if (isBlockFaceVisible(pos, face)) {
+							frontFaceVisible = true;
 						}
 					}
+
+					face = (BlockFace)(axis + 3);
+					glm::vec3 secondPos(x[0] + q[0], x[1] + q[1], x[2] + q[2]);
+
+
+					if (x[axis] < CHUNK_SIZE - 1) {
+						if (isBlockFaceVisible(secondPos, face)) {
+							backFaceVisible = true;
+						}
+					}
+
+
+					//Determines if we are using front face of back face
+					if (frontFaceVisible == false && backFaceVisible == false) {
+						mask[n] = 0;  // if they are both equal??
+					}
+					else if (frontFaceVisible) {
+						mask[n] = 1; // if front face??
+					}
+					else {
+						mask[n] = -1; // if back face ?? WUT
+					}
 				}
 			}
 
-				
+			++x[axis];
+			n = 0; // current Mask index;
+
+				   // iterate over mask to create the mesh
+				   // If mask entry is different than 0, add a face at the corresponding
+				   // position. Takes into consideration the handness of the face, as well as
+				   // wether it is a front of back face.
+
+			for (int j = 0; j < CHUNK_SIZE; ++j) {
+				for (int i = 0; i < CHUNK_SIZE;) {
+
+					int c = mask[n];
+					int width, height;
+
+					// Greedy step
+					//The algorithm tries first to find the width of the current quad. IT
+					// iterates over the row until it hits a voxel whose type is different than the quad's.
+					//When this is found, we do the same for the height, getting the biggest quad
+					// of our current type as possible. This is repeated for all mask entries that are not null, and 
+					//the quads never overlap
+
+					if ((!!c)) {
+						for (width = 1; c == mask[n + width] && i + width < CHUNK_SIZE; ++width) {
+							//Fuck this loop man they didnt explain shit on the website
+						}
+						bool done = false;
+
+						for (height = 1; height + j < CHUNK_SIZE; ++height) {
+							for (int k = 0; k < width; ++k) {
+								if (c != mask[n + k + height*CHUNK_SIZE]) {
+									done = true;
+									break;
+								}
+							}
+
+							//WHY DO YOU USE BREAKS WHY
+							if (done) {
+								break;
+							}
+						}
+
+						x[u] = i;  // sets correct indicies
+						x[v] = j; // sets correct indicies
+
+						int du[3] = { 0,0,0 }; // auxiliary vector for width
+						int dv[3] = { 0,0,0 }; // auxiliary vector for height
+
+						if (c > 0) {
+							dv[v] = height;
+							du[u] = width;
+						}
+						else {
+							c = -c;
+							du[v] = height;
+							dv[u] = width;
+						}
+
+						glm::vec3 botLeft(x[0], x[1], x[2]);
+						glm::vec3 botRight(x[0] + du[0], x[1] + du[1], x[2] + du[2]);
+						glm::vec3 topLeft(x[0] + du[0] + dv[0], x[1] + du[1] + dv[1], x[2] + du[2] + dv[2]);
+						glm::vec3 topRight(x[0] + dv[0], x[1] + dv[1], x[2] + dv[2]);
+
+						botLeft += m_offset;
+						botRight += m_offset;
+						topLeft += m_offset;
+						topRight += m_offset;
+
+						//unsigned int indicies[4];
+						/*
+						indicies[0] = m_meshData->vertexPositions.size();
+						indicies[1] = m_meshData->vertexPositions.size() + 1;
+						indicies[2] = m_meshData->vertexPositions.size() + 2;
+						indicies[3] = m_meshData->vertexPositions.size() + 3;
+
+						m_pRenderer->addVertex(m_meshData, botLeft, botLeft);
+						m_pRenderer->addVertex(m_meshData, botRight, botRight);
+						m_pRenderer->addVertex(m_meshData, topLeft, topLeft);
+						m_pRenderer->addVertex(m_meshData, topRight, topRight);
+
+						m_pRenderer->addTriangle(m_meshData, indicies[0], indicies[1], indicies[2]);
+						m_pRenderer->addTriangle(m_meshData, indicies[2], indicies[3], indicies[0]);
+						*/
+						for (int l = 0; l < height; ++l) {
+							for (int k = 0; k < width; ++k) {
+								mask[n + k + l*CHUNK_SIZE] = 0;
+							}
+						}
+
+						i += width;
+						n += width;
+					}
+					else {
+						++i;
+						++n;
+					}
+				}
+			}
 		}
 	}
-	
 }
 
-VoxelFace* Chunk::getVoxelFace(int x, int y, int z, int side) {
-	VoxelFace* voxelFace = new VoxelFace;
-	voxelFace->side = side;
-	voxelFace->transparent = false;
-	voxelFace->blocktype = m_pBlocks[x][y][z].getBlockType();
-	return voxelFace;
-}
-
-void Chunk::addQuad(glm::vec3 botLeft, glm::vec3 topLeft, glm::vec3 topRight, glm::vec3 botRight, bool backFace) {
-	
-	
-	unsigned int indicies[4];
-
-	indicies[0] = m_meshData->vertexPositions.size();
-	indicies[1] = m_meshData->vertexPositions.size() + 1;
-	indicies[2] = m_meshData->vertexPositions.size() + 2;
-	indicies[3] = m_meshData->vertexPositions.size() + 3;
-
-	m_pRenderer->addVertex(m_meshData, botLeft, glm::vec3(0.0f,0.0f,0.0f));
-	m_pRenderer->addVertex(m_meshData, topLeft, glm::vec3(0.0f, 0.0f, 0.0f));
-	m_pRenderer->addVertex(m_meshData, topRight, glm::vec3(0.0f, 0.0f, 0.0f));
-	m_pRenderer->addVertex(m_meshData, botRight, glm::vec3(0.0f, 0.0f, 0.0f));
-	
-	if (backFace) {
-		m_pRenderer->addTriangle(m_meshData, indicies[2],indicies[0],indicies[1]);
-		m_pRenderer->addTriangle(m_meshData, indicies[1], indicies[3], indicies[2]);
-	}
-	else {
-		m_pRenderer->addTriangle(m_meshData, indicies[2], indicies[3], indicies[1]);
-		m_pRenderer->addTriangle(m_meshData, indicies[1], indicies[0], indicies[2]);
-	}
-
-}
+//Private
 

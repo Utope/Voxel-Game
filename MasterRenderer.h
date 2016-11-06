@@ -6,6 +6,8 @@
 #include "GLSL_ShaderManager.h"
 #include "glm\glm.hpp"
 
+
+
 class MasterRenderer{
 public:
 	MasterRenderer();
@@ -32,6 +34,7 @@ private:
 	glm::mat4 m_matrixOrthographic;
 
 	void _prepare(Camera camera);
+
 	
 };
 

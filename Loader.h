@@ -3,11 +3,9 @@
 #include "GL\glew.h"
 #include "RawModel.h"
 #include "glm\glm.hpp"
-
 #include "RawModel.h"
 #include "ModelTexture.h"
 #include "TexturedModel.h"
-#include "stb_image.h"
 
 class Loader {
 public:

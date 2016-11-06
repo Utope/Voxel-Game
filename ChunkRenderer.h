@@ -30,22 +30,8 @@ struct TextureMesh_Data {
 
 class ChunkRenderer {
 public:
-	ChunkRenderer(){
-	}
-	~ChunkRenderer() {
-		for (MeshData *meshData : m_meshData) {
-			meshData->vertexPositions.clear();
-			meshData->vertexColors.clear();
-			meshData->vertexIndices.clear();
-
-			glDeleteBuffers(1, &meshData->position_VBO);
-			glDeleteBuffers(1, &meshData->color_VBO);
-			glDeleteBuffers(1, &meshData->indices_VBO);
-			glDeleteVertexArrays(1, &meshData->meshID_VAO);
-
-			delete meshData;
-		}
-	}
+	ChunkRenderer();
+	~ChunkRenderer();
 
 	MeshData* createMesh();
 	void deleteMesh(MeshData* pmeshData);
@@ -63,7 +49,27 @@ private:
 	void flushMeshData(MeshData* pmeshID);
 	void clearMeshDataBuffers(MeshData* pmeshID);
 };
+//Constructor and deconstructor
+ChunkRenderer::ChunkRenderer() {};
 
+ChunkRenderer::~ChunkRenderer() {
+	for (MeshData *meshData : m_meshData) {
+		meshData->vertexPositions.clear();
+		meshData->vertexColors.clear();
+		meshData->vertexIndices.clear();
+
+		glDeleteBuffers(1, &meshData->position_VBO);
+		glDeleteBuffers(1, &meshData->color_VBO);
+		glDeleteBuffers(1, &meshData->indices_VBO);
+		glDeleteVertexArrays(1, &meshData->meshID_VAO);
+
+		delete meshData;
+	}
+}
+
+//Public
+
+//Private
 MeshData* ChunkRenderer::createMesh() {
 	MeshData* mesh = new MeshData;
 	m_meshData.push_back(mesh);

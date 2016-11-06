@@ -131,24 +131,26 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\BasicShader.h" />
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\ModelRenderer.h" />
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\ResourceManagment.h" />
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\TextureAsset.h" />
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\BufferDataLoader.h" />
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\ChunkMesh.h" />
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\ChunkTasks.h" />
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\MeshingTypes.h" />
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Shapes.h" />
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Texture.h" />
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\TextureRegion.h" />
     <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\tinyxml2.h" />
-    <ClInclude Include="SpriteBillboard.h" />
-    <ClInclude Include="SpriteRenderer.h" />
     <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\FPS.h" />
     <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\GLSL_ShaderManager.h" />
     <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\MasterRenderer.h" />
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\TextureLoader.h" />
+    <ClInclude Include="TextureManager.h" />
     <ClInclude Include="GLSL_ShaderProgram.h" />
-    <ClInclude Include="BlockType.h" />
-    <ClInclude Include="BlockTypeManager.h" />
+    <ClInclude Include="VoxelType.h" />
+    <ClInclude Include="VoxelTypeManager.h" />
     <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\ChunkRenderer.h" />
     <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\DebugRenderer.h" />
     <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\DebugShader_Positions_Colors.h" />
     <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Octree.h" />
-    <ClInclude Include="Block.h" />
+    <ClInclude Include="Voxel.h" />
     <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Camera.h" />
     <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Chunk.h" />
     <ClInclude Include="ChunkManager.h" />

@@ -50,7 +50,7 @@ public:
 		m_farView = farView;
 		m_aspectRatio = (float)windowWidth / (float)windowHeight;
 		m_perspective = glm::perspective(m_fov, m_aspectRatio, m_nearView, m_farView);
-		m_cameraSpeed = 0.05f;
+		m_cameraSpeed = 0.5f;
 
 		m_pitch = 0.0f;
 		m_yaw = -90.0f;
