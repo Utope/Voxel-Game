@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Shader">
+      <UniqueIdentifier>{78b4c6a0-9b60-4613-abd8-7b914a2d56fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Terrain">
+      <UniqueIdentifier>{7660fce9-ef2d-46de-b032-6a05effd1cc6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\Display.cpp">
@@ -21,30 +27,12 @@
     <ClCompile Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\tinyxml2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\BufferDataLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\Chunk.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\ChunkManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\ChunkMesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\ChunkRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\ChunkTasks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\DebugRenderer.h">
@@ -60,12 +48,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\FPS.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\GLSL_ShaderManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\GLSL_ShaderProgram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\Loader.h">
@@ -89,9 +71,6 @@
     <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\ShaderProgram_Interface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\Shapes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -113,9 +92,6 @@
     <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\TextureRegion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\tinyxml2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -129,7 +105,31 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\BasicShader.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\GLSL_ShaderProgram.h">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\GLSL_ShaderManager.h">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\ShaderProgram_Interface.h">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\Chunk.h">
+      <Filter>Header Files\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\ChunkManager.h">
+      <Filter>Header Files\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\ChunkMesh.h">
+      <Filter>Header Files\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\ChunkRenderer.h">
+      <Filter>Header Files\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\ChunkTasks.h">
+      <Filter>Header Files\Terrain</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
