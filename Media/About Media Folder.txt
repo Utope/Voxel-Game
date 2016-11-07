@@ -1,0 +1,2 @@
+Contains raw artwork and sound that is not used in the game directly. The bin will store actual files
+That willbe used by the game directly.

@@ -13,174 +13,123 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\MyCode">
-      <UniqueIdentifier>{bcd273be-92ea-4d8b-9554-e8fc75795063}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\MyCode\Entity">
-      <UniqueIdentifier>{6f8b9591-cac8-4da5-b7e1-c563bdc6a48f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\MyCode\RenderEngine">
-      <UniqueIdentifier>{f71d757e-da1a-4e29-a097-e5efe3d4959a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\MyCode\RenderEngine\ToolBox">
-      <UniqueIdentifier>{caa54fa7-3979-476e-934a-1de01bd99752}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\MyCode\RenderEngine\Renderers">
-      <UniqueIdentifier>{a66947fa-f54f-44b7-9267-5ad759fe6844}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\MyCode\Voxels">
-      <UniqueIdentifier>{e432071b-4d47-4d33-8377-a4efaf66baf6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\MyCode\Voxels\Chunk">
-      <UniqueIdentifier>{c8d153e8-e9fd-4dff-9067-2f39e3856d44}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\MyCode\Voxels\Block">
-      <UniqueIdentifier>{a11a373f-e311-44b3-a232-5876ec340654}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\MyCode\OLD_CODE">
-      <UniqueIdentifier>{9be435f5-ecbf-483d-859f-d6ef65bdbac5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\MyCode\RenderEngine\Renderers\Shaders">
-      <UniqueIdentifier>{f91db788-ed3d-4197-96ba-435ea43b050f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\ExternalLibs">
-      <UniqueIdentifier>{e7a3a01c-ac5b-44c7-ad13-6c5372366dca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\MyCode\RenderEngine\ResourceManagment">
-      <UniqueIdentifier>{003ab73d-859b-479d-9630-92de9321dbec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\MyCode\RenderEngine\Renderers\Mesh">
-      <UniqueIdentifier>{366ed1c9-862f-42f1-b0cb-2e0b1ca8f3a7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\MyCode\RenderEngine\ToolBox\Algorithms">
-      <UniqueIdentifier>{01cd1235-23f4-435a-a2e3-27aaf6a023b0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\MyCode\RenderEngine\ToolBox\RandomGeneration">
-      <UniqueIdentifier>{1d88c343-bff7-4163-aa7d-5e90c5d21693}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\MyCode\RenderEngine\Renderers\Mesh\MeshTypes">
-      <UniqueIdentifier>{e136c67f-9958-45c4-bb70-c8f42d98199c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Physics">
-      <UniqueIdentifier>{72e5a176-b355-41b9-be15-1991d39f3bc1}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Bobby%27s Project\Bobby%27s Project\main.cpp">
+    <ClCompile Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\Display.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Bobby%27s Project\Bobby%27s Project\Display.cpp">
+    <ClCompile Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Bobby%27s Project\Bobby%27s Project\tinyxml2.cpp">
-      <Filter>Header Files\ExternalLibs</Filter>
+    <ClCompile Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\tinyxml2.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\RawModel.h">
-      <Filter>Header Files\MyCode\RenderEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Loader.h">
-      <Filter>Header Files\MyCode\RenderEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\ModelTexture.h">
-      <Filter>Header Files\MyCode\RenderEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\TexturedModel.h">
-      <Filter>Header Files\MyCode\RenderEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Transform.h">
-      <Filter>Header Files\MyCode\RenderEngine\ToolBox</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Entity.h">
-      <Filter>Header Files\MyCode\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Camera.h">
-      <Filter>Header Files\MyCode\RenderEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Renderer.h">
-      <Filter>Header Files\MyCode\RenderEngine\Renderers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\DebugRenderer.h">
-      <Filter>Header Files\MyCode\RenderEngine\Renderers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\ChunkRenderer.h">
-      <Filter>Header Files\MyCode\RenderEngine\Renderers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Display.h">
-      <Filter>Header Files\MyCode\RenderEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Octree.h">
-      <Filter>Header Files\MyCode\RenderEngine\ToolBox\Algorithms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\FPS.h">
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\BufferDataLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GLSL_ShaderProgram.h">
-      <Filter>Header Files\MyCode\RenderEngine\Renderers\Shaders</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\Camera.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\MasterRenderer.h">
-      <Filter>Header Files\MyCode\RenderEngine\Renderers</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\Chunk.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\GLSL_ShaderManager.h">
-      <Filter>Header Files\MyCode\RenderEngine\Renderers\Shaders</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\ChunkManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ChunkManager.h">
-      <Filter>Header Files\MyCode\Voxels\Chunk</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\ChunkMesh.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\tinyxml2.h">
-      <Filter>Header Files\ExternalLibs</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\ChunkRenderer.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\stb_image.h">
-      <Filter>Header Files\ExternalLibs</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\ChunkTasks.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Chunk.h">
-      <Filter>Header Files\MyCode\Voxels\Chunk</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\DebugRenderer.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\StaticShader.h">
-      <Filter>Header Files\MyCode\OLD_CODE</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\DebugShader_Positions_Colors.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\ShaderProgram_Interface.h">
-      <Filter>Header Files\MyCode\OLD_CODE</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\Display.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\BasicShader.h">
-      <Filter>Header Files\MyCode\OLD_CODE</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\Entity.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\DebugShader_Positions_Colors.h">
-      <Filter>Header Files\MyCode\OLD_CODE</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\FPS.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Texture.h">
-      <Filter>Header Files\MyCode\RenderEngine\Renderers\Mesh</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\GLSL_ShaderManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TextureManager.h">
-      <Filter>Header Files\MyCode\RenderEngine\Renderers\Mesh</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\GLSL_ShaderProgram.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\TextureRegion.h">
-      <Filter>Header Files\MyCode\RenderEngine\Renderers\Mesh</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\Loader.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\ChunkMesh.h">
-      <Filter>Header Files\MyCode\RenderEngine\Renderers\Mesh\MeshTypes</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\MasterRenderer.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\BufferDataLoader.h">
-      <Filter>Header Files\MyCode\RenderEngine\Renderers\Mesh\MeshTypes</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\MeshingTypes.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VoxelType.h">
-      <Filter>Header Files\MyCode\Voxels\Block</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\ModelTexture.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Voxel.h">
-      <Filter>Header Files\MyCode\Voxels\Block</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\Octree.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VoxelTypeManager.h">
-      <Filter>Header Files\MyCode\Voxels\Block</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\RawModel.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Shapes.h">
-      <Filter>Header Files\Physics</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\Renderer.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\ChunkTasks.h">
-      <Filter>Header Files\MyCode\Voxels\Chunk</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\ShaderProgram_Interface.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\MeshingTypes.h">
-      <Filter>Header Files\MyCode\Voxels\Chunk</Filter>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\Shapes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\StaticShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\TexturedModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\TextureManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\TextureRegion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\tinyxml2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\Transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\Voxel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\VoxelType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\VoxelTypeManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Bobby%27s Project\Bobby%27s Project\Source\BasicShader.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
