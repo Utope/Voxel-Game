@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding = "utf-8"?>
-
-<Texture>
-	<TextureAsset>
-		<AssetID>test</AssetID>
-		<SourceRectangle>13</SourceRectangle>
-	</TextureAsset>
-</Texture>

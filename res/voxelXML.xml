@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding = "utf-8"?>
-
-<VoxelTypes>
-	<Voxel>
-		<Name>Dirt</Name>
-		<Num>52</Num>
-	</Voxel>
-</VoxelTypes>
